@@ -1,0 +1,53 @@
+<arquillian xmlns="http://jboss.org/schema/arquillian"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="  
+        http://jboss.org/schema/arquillian  
+        http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+  <extension qualifier="docker">
+    <property name="definitionFormat">CUBE</property>
+    <property name="dockerContainers">
+      qtest01:
+        image: qtest
+        exposedPorts: [8080/tcp]
+        await:
+          strategy: sleeping
+          sleepTime: 30 s
+        restartPolicy:
+          name: failure
+          maximumRetryCount: 1
+        manual: false
+
+      qtest02:
+        image: qtest
+        exposedPorts: [8080/tcp]
+        await:
+          strategy: sleeping
+          sleepTime: 30 s
+        restartPolicy:
+          name: failure
+          maximumRetryCount: 1
+        manual: false
+
+      qtest03:
+        image: qtest
+        exposedPorts: [8080/tcp]
+        await:
+          strategy: sleeping
+          sleepTime: 30 s
+        restartPolicy:
+          name: failure
+          maximumRetryCount: 1
+        manual: false
+
+      load_balancer:
+        image: dockercloud/haproxy
+        links:
+          - qtest01
+          - qtest02
+          - qtest03
+        portBindings: [8080->80/tcp]
+    </property>
+  </extension>
+
+</arquillian>
